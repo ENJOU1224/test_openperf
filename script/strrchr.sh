@@ -9,10 +9,10 @@ find "$openperf_dir" -type f \( -name "*.c" -o -name "*.h" \) -exec grep -I -lw 
     echo "正在修改文件: $file"
     
     # 执行精确替换（原地修改）
-    sed -i 's/\*strrchr\b/*strrchra/g' "$file"
+    sed -i 's/strrchr\b/strrchra/g' "$file"
     
     # 检查替换是否成功
-    if grep -q "*strrchra" "$file"; then
+    if grep -q "strrchra" "$file"; then
         echo "  ✓ 已替换：$file"
     else
         echo "  ⚠️ 未找到需要替换的内容：$file"

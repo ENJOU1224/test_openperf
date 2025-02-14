@@ -19,3 +19,4 @@ $SCRIPT_HOME/elements.sh
 $SCRIPT_HOME/sprintf.sh
 $SCRIPT_HOME/bench1.sh
 $SCRIPT_HOME/makefile.sh
+$SCRIPT_HOME/tcc.sh
