@@ -43,6 +43,7 @@ RUN useradd -m -u 1001 openperf && \
         flex \
         libsdl2-dev \
         libreadline-dev \
+        wget \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

@@ -1,7 +1,10 @@
+coremark:
 
-common:
-	./script/CompileCommon.sh
+nemu-%:
+	./script/CompileCommon.sh $*
 
+gem5-%:
+	$(GEM5_HOME)/build/RISCV/gem5.opt $(GEM5_HOME)/configs/example/xiangshan.py --raw-cpt --generic-rv-cpt=$(AM_HOME)/apps/$*/build/$*-riscv64-xs.bin
 fix:
 	./script/fix.sh
 env:
