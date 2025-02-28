@@ -1,0 +1,82 @@
+# 旧版本 openperf 在 xs-gem5 运行测试
+
+仓库文件结构如下
+
+```plaintext
+.
+├── Dockerfile      用于构建 Docker 镜像
+├── Makefile        用于编译运行程序
+├── README.md       仓库介绍
+└── script          用于编译及适配调整的脚本
+```
+
+## 环境准备：docker
+
+docker安装可参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)
+
+安装完成后根据当前目录下 Dockerfile 构建镜像，我的指令如下（仅供参考）
+
+```bash
+docker build -t openperf .
+```
+
+构建完成后，使用上一步构建完成的镜像启动容器。
+我选择交互模式运行，并使用主机网络，以便借用主机的科学上网工具加速 `git clone`。
+我的指令如下（仅供参考）：
+
+```bash
+docker run -it --name openperf1 --network host openperf:latest
+```
+
+## 在容器内借助香山的 am 和 NEMU 构建并运行 openperf 测试项目
+
+### 环境准备
+
+首先运行脚本 `git clone` 项目所需仓库和设置环境变量
+
+```bash
+source script/env.sh
+```
+
+脚本会 clone NEMU am GEM5 至当前目录。并设置后续脚本运行过程中所需要的环境变量。具体内容可以查看 env.sh， 有一定注释。
+
+### 程序适配
+
+项目选用的并非最新的 openperf 版本，该版本 openperf 基于 “一生一芯” 环境中的 am 开发，与香山环境中 am 不完全相同，需要一定适配迁移。项目非常粗糙的进行了一定的适配，使得该版本的 openperf 得以在香山的 am 中得以成功编译及在 NEMU 上可以成功运行。
+
+```bash
+make fix # 调用脚本进行 openperf 适配
+```
+
+### 程序编译及测试执行
+
+在适配修改完成后，将 openperf 所需编译测试项移动到 am 对应结构目录下，进行编译，并使用 NEMU 测试执行。
+
+首先，在项目根目录运行以下指令编译香山配置的 NEMU，后续用于测试运行 openperf 测试项目
+
+```bash
+make nemu
+```
+
+而后，在项目根目录运行以下命令，将测试项及 openperf 带的依赖库移入 am 对应位置编译，并在 NEMU 上测试执行。
+
+```bash
+make nemu-linpack
+```
+
+成功后会出现测试结果的输出。通过修改`make nemu-linpack` 中的 `linpack` 相关字样来编译并测试执行不同的测试项目，注意，cpuemu 测试项暂时不可用。
+
+## 在 gem5 上运行测试
+
+```bash
+./script/gem5.sh
+```
+
+首先，按上述操作运行脚本以编译 gem5，编译过程会花费一段时间，编译过程中在看到下列字样时按 enter 以继续：
+
+```plaintext
+You're missing the gem5 style or commit message hook. These hooks help
+to ensure that your code follows gem5's style rules on git commit.
+This script will now install the hook in your .git/hooks/ directory.
+Press enter to continue, or ctrl-c to abort:
+```

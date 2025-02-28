@@ -21,3 +21,6 @@ $SCRIPT_HOME/bench1.sh
 $SCRIPT_HOME/makefile.sh
 $SCRIPT_HOME/tcc.sh
 $SCRIPT_HOME/bool.sh
+$SCRIPT_HOME/stdio.sh
+$SCRIPT_HOME/makefile.sh
+$SCRIPT_HOME/bs_realign.sh

@@ -1,5 +1,7 @@
 NEMU/
+GEM5/
 nexus-am/
 openperf/
+ready-to-run/
 */build/
 riscv64-nemu-interpreter-c1469286ca32-so

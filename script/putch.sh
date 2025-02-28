@@ -9,7 +9,7 @@ find "$openperf_dir" -type f \( -name "*.c" -o -name "*.h" \) -exec grep -I -l "
     echo "正在修改文件: $file"
     
     # 执行精确替换（原地修改）
-     sed -i 's/\bputch(/_putchar(/g' "$file"
+     sed -i 's/\bputch(/_putc(/g' "$file"
     #sed -i '/\bputch(/d' "$file"
     
     # # 检查替换是否成功
