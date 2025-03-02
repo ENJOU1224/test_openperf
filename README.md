@@ -58,7 +58,7 @@ make fix # 调用脚本进行 openperf 适配
 make nemu
 ```
 
-而后，在项目根目录运行以下命令，将测试项及 openperf 带的依赖库移入 am 对应位置编译，并在 NEMU 上测试执行。
+而后，在项目根目录运行以下命令，该命令会将测试项及 openperf 带的依赖库移入 am 对应位置编译，并在 NEMU 上测试执行。
 
 ```bash
 make nemu-linpack
@@ -80,3 +80,11 @@ to ensure that your code follows gem5's style rules on git commit.
 This script will now install the hook in your .git/hooks/ directory.
 Press enter to continue, or ctrl-c to abort:
 ```
+
+编译完成后，在项目根目录运行以下命令，该命令会将已经在 nemu 上成功编译运行的二进制文件在 xs-gem5 上运行。
+
+```bash
+make gem5-linpack
+```
+
+成功后会出现测试结果的输出。通过修改`make gem5-linpack` 中的 `linpack` 相关字样来编译并测试执行不同的测试项目，同样，cpuemu 测试项暂时不可用。
