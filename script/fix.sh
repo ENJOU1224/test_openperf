@@ -24,3 +24,5 @@ $SCRIPT_HOME/bool.sh
 $SCRIPT_HOME/stdio.sh
 $SCRIPT_HOME/makefile.sh
 $SCRIPT_HOME/bs_realign.sh
+$SCRIPT_HOME/libgcc.sh
+$SCRIPT_HOME/osdep.sh
