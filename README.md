@@ -12,24 +12,6 @@
 
 ## 环境准备：docker
 
-docker安装可参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)
-
-安装完成后根据当前目录下 Dockerfile 构建镜像，我的指令如下（仅供参考）
-
-```bash
-docker build -t openperf .
-```
-
-构建完成后，使用上一步构建完成的镜像启动容器。
-我选择交互模式运行，并使用主机网络，以便借用主机的科学上网工具加速 `git clone`。
-我的指令如下（仅供参考）：
-
-```bash
-docker run -it --name openperf1 --network host openperf:latest
-```
-
-## 在容器内借助香山的 am 和 NEMU 构建并运行 openperf 测试项目
-
 ### 环境准备
 
 首先运行脚本 `git clone` 项目所需仓库和设置环境变量
@@ -39,6 +21,28 @@ source script/env.sh
 ```
 
 脚本会 clone NEMU am GEM5 至当前目录。并设置后续脚本运行过程中所需要的环境变量。具体内容可以查看 env.sh， 有一定注释。
+
+docker安装可参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)
+
+安装完成,执行`script/docker.sh`脚本,脚本将根据当前目录下 Dockerfile 构建镜像并启动新容器,详细可看脚本注释
+
+```bash
+./script/docker.sh
+```
+
+**重要提示**：
+
+- 首次运行会耗时较长（需要构建镜像）
+- 若修改了 Dockerfile 或项目代码，重新运行脚本即可更新环境
+- 所有生成文件会保留在挂载目录中，不会因容器重启丢失
+
+使用以下命令进入容器的交互式 shell：
+
+```bash
+docker compose exec openperf1 bash
+```
+
+## 在容器内借助香山的 am 和 NEMU 构建并运行 openperf 测试项目
 
 ### 程序适配
 
