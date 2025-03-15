@@ -6,8 +6,7 @@ ENV GEM5_HOME=/home/openperf/GEM5
 ENV PATH="${GEM5_HOME}/build/X86:${PATH}"
 
 # 创建用户并安装依赖
-RUN useradd -m -u 1001 openperf && \
-    apt-get update && \
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         && \
@@ -48,13 +47,15 @@ RUN useradd -m -u 1001 openperf && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# 创建与宿主机匹配的用户
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN groupadd -g $GROUP_ID openperf && \
+    useradd -u $USER_ID -g $GROUP_ID -m openperf
+
 # 切换到 openperf 用户
 USER openperf
 WORKDIR /home/openperf
-
-# 复制源代码和构建脚本
-COPY --chown=openperf:openperf script /home/openperf/script
-COPY --chown=openperf:openperf Makefile /home/openperf/Makefile
 
 # 设置默认命令为 Bash
 CMD ["/bin/bash"]
