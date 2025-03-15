@@ -45,17 +45,19 @@ RUN apt-get update && \
         wget \
         && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* 
 
 # 创建与宿主机匹配的用户
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 RUN groupadd -g $GROUP_ID openperf && \
-    useradd -u $USER_ID -g $GROUP_ID -m openperf
+    useradd -u $USER_ID -g $GROUP_ID -m openperf 
 
 # 切换到 openperf 用户
 USER openperf
 WORKDIR /home/openperf
+
+RUN echo 'source /home/openperf/script/env.sh' >> /home/openperf/.bashrc
 
 # 设置默认命令为 Bash
 CMD ["/bin/bash"]
