@@ -4,10 +4,11 @@
 
 ```plaintext
 .
-├── Dockerfile      用于构建 Docker 镜像
-├── Makefile        用于编译运行程序
-├── README.md       仓库介绍
-└── script          用于编译及适配调整的脚本
+├── docker-compose.yaml  容器编排配置文件
+├── Dockerfile           用于构建 Docker 镜像
+├── Makefile             用于编译运行程序
+├── README.md            仓库介绍
+└── script               用于编译及适配调整的脚本
 ```
 
 ## 环境准备：docker
