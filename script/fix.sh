@@ -1,7 +1,8 @@
 #! /usr/bin/env bash
 $SCRIPT_HOME/ModifyOpenperf.sh  # 为openperf中的库的Makefile针对香山am做适配
 $SCRIPT_HOME/ioe.sh             # 将部分测试项目中ioe_init的函数名调整为香山am中的_ioe_init
-$SCRIPT_HOME/putch.sh           # 将openperf中的putch函数名调整为香山am中的对应函数名 $SCRIPT_HOME/strchr.sh          # 将openperf中定义的strchr名称调整，以避免与香山am中同名函数冲突，使用openperf自定义函数
+$SCRIPT_HOME/putch.sh           # 将openperf中的putch函数名调整为香山am中的对应函数名 
+$SCRIPT_HOME/strchr.sh          # 将openperf中定义的strchr名称调整，以避免与香山am中同名函数冲突，使用openperf自定义函数
 $SCRIPT_HOME/strrchr.sh         # 将openperf中定义的strrchr名称调整，以避免与香山am中同名函数冲突，使用openperf自定义函数
 $SCRIPT_HOME/uptimes.sh         # 调整openperf中uptime函数名，以使用openperf自定义uptime函数
 $SCRIPT_HOME/PATH_TO_DIR.sh     # 将openperf中所有makefile中的PATH变量改为香山am中使用的DIR变量
