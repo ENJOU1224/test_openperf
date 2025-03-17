@@ -7,4 +7,8 @@ cd "$AM_HOME/apps/common/bench" && make ARCH=riscv64-xs || exit
 cd "$AM_HOME/apps/common/soft-fp" && make ARCH=riscv64-xs || exit
 cd "$AM_HOME/apps/common/openlibm" && make ARCH=riscv64-xs || exit
 cd "$AM_HOME/apps/$p1" && make ARCH=riscv64-xs || exit
-"$NEMU_HOME/build/riscv64-nemu-interpreter" -b "$AM_HOME/apps/$p1/build/$p1-riscv64-xs.bin"
+if [ "$p1" == "tcc" ]; then
+    "$NEMU_HOME/build/riscv64-nemu-interpreter" -b "$AM_HOME/apps/$p1/build/riscv-$p1-riscv64-xs.bin"
+else
+    "$NEMU_HOME/build/riscv64-nemu-interpreter" -b "$AM_HOME/apps/$p1/build/$p1-riscv64-xs.bin"
+fi
