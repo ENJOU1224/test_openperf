@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# 为openperf的common文件夹下的Makefile适配香山AM,包括增加LIBS += klib和将include的Makefile改为Makefile.lib
 target_dir="${T1_HOME}/openperf/src/common"
 
 # 检查目标目录是否存在
