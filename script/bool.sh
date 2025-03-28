@@ -18,4 +18,3 @@ else
 fi
 
 echo "修复完成：$c_file"
-
