@@ -19,3 +19,4 @@ $SCRIPT_HOME/bs_realign.sh      # 调整x264中bs_realign的实现来避免编�
 $SCRIPT_HOME/libgcc.sh          # 将自己实现的clz和ctz函数放入依赖其的soft-fp库中
 $SCRIPT_HOME/osdep.sh           # 调整x264，使其使用x264自己实现的x264_clz 和 x264_ctz函数
 $SCRIPT_HOME/maxinst.sh         # 调整gem5最大指令数限制保证可以跑完x264测试
+$SCRIPT_HOME/InsertTestPara.sh  # 在gem5里插入测试用参数函数相关内容
