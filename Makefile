@@ -6,6 +6,7 @@ gem5-tcc:
 
 gem5-%:
 	$(GEM5_HOME)/build/RISCV/gem5.opt $(GEM5_HOME)/configs/example/xiangshan.py  --ideal-kmhv3 --cpu-profile=$(PARA) --raw-cpt --generic-rv-cpt=$(AM_HOME)/apps/$*/build/$*-riscv64-xs.bin
+	mv $(T1HOME)/m5out $(T1HOME)/result/$*-$(PARA)
 
 fix:
 	./script/fix.sh
