@@ -34,11 +34,13 @@ nemu-%:
 
 gem5-tcc:_validate_para
 	$(GEM5)/build/RISCV/gem5.opt $(GEM5)/configs/example/xiangshan.py --ideal-kmhv3 --cpu-profile=$(PARA) --raw-cpt --generic-rv-cpt=$(AM_HOME)/apps/tcc/build/riscv-tcc-riscv64-xs.bin
-	mv $(T1_HOME)/m5out $(T1_HOME)/result/tcc-$(PARA) -f
+	rm $(T1_HOME)/result/tcc-$(PARA) -rf
+	mv $(T1_HOME)/m5out $(T1_HOME)/result/tcc-$(PARA)
 
 gem5-%:_validate_para
 	$(GEM5)/build/RISCV/gem5.opt $(GEM5)/configs/example/xiangshan.py  --ideal-kmhv3 --cpu-profile=$(PARA) --raw-cpt --generic-rv-cpt=$(AM_HOME)/apps/$*/build/$*-riscv64-xs.bin
-	mv $(T1_HOME)/m5out $(T1_HOME)/result/$*-$(PARA) -f
+	rm $(T1_HOME)/result/$*-$(PARA) -rf
+	mv $(T1_HOME)/m5out $(T1_HOME)/result/$*-$(PARA) 
 
 fix:
 	./script/fix.sh
