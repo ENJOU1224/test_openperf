@@ -93,3 +93,5 @@ make gem5-linpack
 ```bash
 make gem5-linpack PARA=frontend # 测试前端砍了规格的方案
 ```
+
+** 注意，所有测试项都需要先make nemu-xxx 再make gem5-xxx **
