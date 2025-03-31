@@ -58,5 +58,5 @@ x264:
 	cd openperf/src/x264 && make ARCH=riscv64-xs
 
 nemu:
-	cd NEMU && make clean && make riscv64-xs_defconfig && make -j
+	docker compose exec openperf1 bash -c "cd NEMU && make clean && make riscv64-xs_defconfig && make -j"
 .PHONY: common init env nemu fix _validate_para help
