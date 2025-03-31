@@ -68,7 +68,7 @@ def set_branch_prediction_params(args, system):
             
             # 历史长度调整
             bp.tage.histLengths = [4,7,12]  # 原长历史截断
-            bp.tage.numPredictors = 4  # 原14 → 减少预测器数量
+            bp.tage.numPredictors = 2  # 原14 → 减少预测器数量
 
 def set_cache_hierarchy_params(args, system):
     """测试缓存层次敏感性（容量/MSHR/延迟）"""
@@ -78,7 +78,6 @@ def set_cache_hierarchy_params(args, system):
             cpu.icache.size = '32kB'    # 原128kB
             cpu.dcache.size = '32kB'
             cpu.dcache.mshrs = 8        # 原32
-            cpu.icache.enable_wayprediction = True  # 开启way预测增加延迟
     
     # L2缓存限制
     if args.l2cache:
