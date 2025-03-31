@@ -2,8 +2,6 @@ FROM ubuntu:22.04
 
 # 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive
-ENV GEM5_HOME=/home/openperf/GEM5
-ENV PATH="${GEM5_HOME}/build/X86:${PATH}"
 
 # 创建用户并安装依赖
 RUN apt-get update && \

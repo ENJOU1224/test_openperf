@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file_path="$GEM5_HOME/configs/common/FSConfig.py"  
+file_path="$GEM5/configs/common/FSConfig.py"  
 
 # 检查是否已插入过
 if grep -q "RiscvRTC" "$file_path"; then
