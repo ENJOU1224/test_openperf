@@ -37,12 +37,6 @@ docker安装可参考 [Docker 官方安装文档](https://docs.docker.com/engine
 - 若修改了 Dockerfile 或项目代码，重新运行脚本即可更新环境
 - 所有生成文件会保留在挂载目录中，不会因容器重启丢失
 
-使用以下命令进入容器的交互式 shell：
-
-```bash
-docker compose exec openperf1 bash
-```
-
 ## 在容器内借助香山的 am 和 NEMU 构建并运行 openperf 测试项目
 
 ### 程序适配
@@ -92,4 +86,10 @@ Press enter to continue, or ctrl-c to abort:
 make gem5-linpack
 ```
 
-成功后会出现测试结果的输出。通过修改`make gem5-linpack` 中的 `linpack` 相关字样来编译并测试执行不同的测试项目，同样，cpuemu 测试项暂时不可用。
+成功后会出现测试结果的输出。通过修改`make gem5-linpack` 中的 `linpack` 相关字样来编译并测试执行不同的测试项目，同样，cpuemu 测试项暂时不可用。测试结果会出现在项目根目录的result文件夹下。
+
+可以通过传入参数`PARA`来选择使用的测试方案，在命令行输入`make help`查看可选择的测试参数
+
+```bash
+make gem5-linpack PARA=frontend # 测试前端砍了规格的方案
+```
