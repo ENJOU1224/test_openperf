@@ -92,40 +92,6 @@ def set_cache_hierarchy_params(args, system):
         system.l3.size = '2MB'         # 典型值通常8MB+
         system.l3.mshrs = 32           # 原128
 
-def set_idealized_params(args, system):
-    """理想化参数对照组（消除所有架构限制）"""
-    for cpu in system.cpu:
-        # 无限前端
-        cpu.commitToFetchDelay = 0
-        cpu.fetchQueueSize = 512
-        cpu.decodeWidth = 16
-        cpu.renameWidth = 16
-        
-        # 超大执行窗口
-        cpu.dispWidth = [64,64,64]
-        cpu.numROBEntries = 4096
-        cpu.numPhysIntRegs = 1024
-        cpu.numDQEntries = [128,64,64]
-        
-        # 完美存储系统
-        cpu.LQEntries = 512
-        cpu.SQEntries = 512
-        cpu.SbufferEntries = 128
-        
-        # 理想分支预测
-        if hasattr(cpu, 'branchPred'):
-            bp = cpu.branchPred
-            bp.uftb.numEntries = 65536
-            bp.ftb.numEntries = 65536
-            bp.predictWidth = 128
-            bp.fsq_size = 512
-        
-        # 伪理想缓存
-        if args.caches:
-            cpu.icache.size = '1GB'
-            cpu.dcache.size = '1GB'
-            cpu.dcache.mshrs = 1024
-
 # 配置映射字典（方便统一调用）
 param_profiles = {
     'frontend': set_frontend_bottleneck_params,
@@ -133,7 +99,6 @@ param_profiles = {
     'memory': set_memory_subsystem_params,
     'branch': set_branch_prediction_params,
     'cache': set_cache_hierarchy_params,
-    'full_ideal': set_idealized_params,
     None: haha,  
     '': haha     
 }
