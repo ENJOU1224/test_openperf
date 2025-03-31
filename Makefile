@@ -24,7 +24,7 @@ help:
 		@for desc in $(PARAM_DESCS); do \
         para=$${desc%%=*}; \
         description=$${desc#*=}; \
-        printf "  %-10s - %s\n" "$$param" "$$description"; \
+        printf "  %-10s - %s\n" "$$para" "$$description"; \
     done
 		@echo ""
 		@echo "Usage: make GEM5-* [PARA=value]"
