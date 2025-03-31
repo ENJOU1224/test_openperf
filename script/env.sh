@@ -5,6 +5,7 @@ git clone https://github.com/OpenXiangShan/NEMU.git --filter=tree:0
 git clone -b origin/main https://github.com/OSCPU/openperf.git --filter=tree:0
 git clone https://github.com/OpenXiangshan/GEM5.git  --filter=tree:0
 wget  -nc https://github.com/OpenXiangShan/GEM5/releases/download/2024-10-16/riscv64-nemu-interpreter-c1469286ca32-so
+mkdir -p result
 
 export T1_HOME=$PWD                                                     # 根目录
 export AM_HOME=$PWD/nexus-am                                            # AM
