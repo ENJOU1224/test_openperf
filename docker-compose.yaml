@@ -10,4 +10,5 @@ services:
     stdin_open: true        # 对应 -i 参数
     volumes:
       # 挂载目录
+      - "/etc/skel/.bashrc:/home/openperf/.bashrc:ro"
       - "${T1_HOME}:/home/openperf"
