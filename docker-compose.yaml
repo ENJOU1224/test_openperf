@@ -10,5 +10,13 @@ services:
     stdin_open: true        # 对应 -i 参数
     volumes:
       # 挂载目录
-      - "/etc/skel/.bashrc:/home/openperf/.bashrc:ro"
       - "${T1_HOME}:/home/openperf"
+    environment:
+      - T1_HOME=/home/openperf
+      - AM_HOME=/home/openperf/nexus-am
+      - GEM5=/home/openperf/GEM5
+      - OPENPERF_HOME=/home/openperf/openperf
+      - NEMU_HOME=/home/openperf/NEMU
+      - SCRIPT_HOME=/home/openperf/script
+      - LINUX_GNU_TOOLCHAIN=1
+      - GCBV_REF_SO=/home/openperf/riscv64-nemu-interpreter-c1469286ca32-so
