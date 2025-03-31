@@ -55,7 +55,5 @@ RUN groupadd -g $GROUP_ID openperf && \
 USER openperf
 WORKDIR /home/openperf
 
-RUN echo 'source /home/openperf/script/env.sh' >> /home/openperf/.bashrc
-
 # 设置默认命令为 Bash
 CMD ["/bin/bash"]
