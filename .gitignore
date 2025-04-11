@@ -12,3 +12,5 @@ result/
 .bash_history
 .viminfo
 dramsim3*
+test_logs
+analysis_plots
