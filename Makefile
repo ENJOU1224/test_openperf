@@ -1,5 +1,5 @@
 # 定义允许的参数列表和描述
-VALID_PARAS := frontend execution memory branch cache ''
+VALID_PARAS := frontend_L0 frontend_L1 frontend_L2 execution_L0 execution_L1 execution_L2 memory_L0 memory_L1 memory_L2 branch_L0 branch_L1 branch_L2 cache_L0 cache_L1 cache_L2 ''
 PARAM_DESCS := \
     frontend="Frontend bottleneck parameters" \
     execution="Execution contention parameters" \
@@ -59,4 +59,10 @@ x264:
 
 nemu:
 	docker compose exec openperf1 bash -c "cd NEMU && make clean && make riscv64-xs_defconfig && make -j"
-.PHONY: common init env nemu fix _validate_para help
+
+test:
+	./script/run_test.sh
+
+analyze:
+	python script/analyze_result.py
+.PHONY: common init env nemu fix _validate_para help test analyze
