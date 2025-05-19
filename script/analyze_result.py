@@ -6,10 +6,10 @@ import numpy as np
 import math # 用于处理 NaN
 
 # --- 配置 ---
-base_result_dir = '$T1_HOME/result'  # 你的结果根目录
+base_result_dir = os.path.expandvars('$T1_HOME/result')  # Unix风格
 output_dir = 'analysis_plots' # 图表输出目录
 benchmarks = ['gemm', 'linpack', 'mcf', 'stream', 'tcc', 'whetstone', 'x264']
-components = ['frontend', 'execution', 'memory', 'cache', 'branch']
+components = ['frontend', 'execution', 'memory', 'cache', 'branch','branch-bandwidth']
 # 注意：假设 '' 代表 ideal/baseline (即 'benchmark-' 目录)
 levels = ['', '_L0', '_L1', '_L2']
 level_labels = ['Ideal/Base', 'L0', 'L1', 'L2'] # 用于图表标签
@@ -20,33 +20,44 @@ metrics_to_extract = {
     # Overall
     'IPC': 'system.cpu.ipc',
     'Cycles': 'system.cpu.numCycles',
-    # Frontend
+
     'Frontend_Bound_Pct': 'system.cpu.frontendBound',
+    'Frontend_Latency_Bound_Pct': 'system.cpu.frontendLatencyBound',
+    'Frontend_Bandwidth_Bound_Pct': 'system.cpu.frontendBandwidthBound',
+
+    'Bad_Spec_Bound_Pct': 'system.cpu.badSpecBound',
+    'Branch_Mispred_Bound_Pct': 'system.cpu.branchMissPrediction',
+    'Machine_Clears_Bound_Pct': 'system.cpu.machineClears',
+
+    'Backend_Bound_Pct': 'system.cpu.backendBound',
+    'Core_Bound_Pct': 'system.cpu.coreBound',
+    'Memory_Bound_Pct': 'system.cpu.memoryBound',
+    'L1_Bound_Pct': 'system.cpu.l1Bound',
+    'L2_Bound_Pct': 'system.cpu.l2Bound',
+    'L3_Bound_Pct': 'system.cpu.l3Bound',
+    'Mem_Bound_Pct': 'system.cpu.memBound',
+    'Store_Bound_Pct': 'system.cpu.storeBound',
+    # Frontend
     'Fetch_Rate': 'system.cpu.fetch.rate',
     # Execution
-    'Core_Bound_Pct': 'system.cpu.coreBound',
     'Issue_Rate': 'system.cpu.iq.issueRate',
     'IQ_Full_Stalls': 'system.cpu.iew.stallEvents::IQFull',
-    'ROB_Full_Stalls': 'system.cpu.iew.stallEvents::ROBFull',
     # Memory
-    'Memory_Bound_Pct': 'system.cpu.memoryBound',
     'L1D_Miss_Rate_Pct': 'system.cpu.dcache.overallMissRate::total',
     'L1D_Avg_Miss_Latency': 'system.cpu.dcache.overallAvgMissLatency::total',
     'LSQ_Full_Stalls': 'system.cpu.iew.stallEvents::LSQFull',
     'SBuf_Full_Cycles': 'system.cpu.lsq0.sbufferFull',
     # Cache
     'L1D_Bound_Pct': 'system.cpu.l1Bound',
-    'L2_Bound_Pct': 'system.cpu.l2Bound',
-    'L3_Bound_Pct': 'system.cpu.l3Bound',
     'L2_Miss_Rate_Pct': 'system.l2_caches.overallMissRate::total',
     'L3_Miss_Rate_Pct': 'system.l3.overallMissRate::total',
     # Branch
     'BP_Mispred_Pct': ('system.cpu.commit.branchMispredicts', 'system.cpu.commit.branches'),
-    'Frontend_Latency_Bound_Pct': 'system.cpu.frontendLatencyBound',
-    'Bad_Spec_Bound_Pct': 'system.cpu.badSpecBound',
-    'Branch_Mispred_Bound_Pct': 'system.cpu.branchMissPrediction',
     'FTB_Miss_Rate_Pct': ('system.cpu.branchPred.ftbMiss', ('system.cpu.branchPred.ftbHit', 'system.cpu.branchPred.ftbMiss')),
     'Cond_Miss_Rate_Pct': ('system.cpu.branchPred.condMiss', 'system.cpu.branchPred.condNum'),
+    'FSQ_Full_Cannot_Enqueue': 'system.cpu.branchPred.fsqFullCannotEnq', # FSQ满无法入队次数
+    'FSQ_Full_Fetch_Hungry': 'system.cpu.branchPred.fsqFullFetchHungry', # FSQ满且取指饥饿周期
+    'Committed_Branches': 'system.cpu.commit.branches',                # 提交的总分支数
 }
 
 # --- 辅助函数 ---

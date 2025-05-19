@@ -24,6 +24,9 @@ params=(
     branch_L0
     branch_L1
     branch_L2
+    branch_bandwidth_L0
+    branch_bandwidth_L1
+    branch_bandwidth_L2
     cache_L0
     cache_L1
     cache_L2

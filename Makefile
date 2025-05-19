@@ -1,5 +1,5 @@
 # 定义允许的参数列表和描述
-VALID_PARAS := frontend_L0 frontend_L1 frontend_L2 execution_L0 execution_L1 execution_L2 memory_L0 memory_L1 memory_L2 branch_L0 branch_L1 branch_L2 cache_L0 cache_L1 cache_L2 ''
+VALID_PARAS := frontend_L0 frontend_L1 frontend_L2 execution_L0 execution_L1 execution_L2 memory_L0 memory_L1 memory_L2 branch_L0 branch_L1 branch_L2 branch_bandwidth_L0 branch_bandwidth_L1 branch_bandwidth_L2 cache_L0 cache_L1 cache_L2 ''
 PARAM_DESCS := \
     frontend="Frontend bottleneck parameters" \
     execution="Execution contention parameters" \

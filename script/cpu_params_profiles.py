@@ -132,6 +132,15 @@ def set_memory_subsystem_params_L2(args, system):
         # 执行资源放宽（避免干扰）
         cpu.dispWidth = [16,16,16]    # 增大确保不是瓶颈
 
+def set_branch_prediction_bandwidth_params_L0(args, system):
+    for cpu in system.cpu:
+        if hasattr(cpu, 'branchPred'):
+            bp = cpu.branchPred
+            # 预测流水线限制
+            bp.predictWidth = 48        # 原64 → 严格限制
+            bp.fsq_size = 192           # 原256 → 减小恢复队列
+            bp.ftq_size = 192 
+            
 def set_branch_prediction_params_L0(args, system):
     """测试分支预测敏感性（预测器容量/恢复机制）"""
     for cpu in system.cpu:
@@ -142,15 +151,19 @@ def set_branch_prediction_params_L0(args, system):
             bp.ftb.numEntries = 8192    # 原16384 → 大幅缩小
             bp.tage.baseTableSize = 8192  # 原16384 → 缩小基础表
             
-            # 预测流水线限制
-            bp.predictWidth = 48        # 原64 → 严格限制
-            bp.fsq_size = 192           # 原256 → 减小恢复队列
-            bp.ftq_size = 192 
-            
             # 历史长度调整
             bp.tage.histLengths = [4, 7, 12, 16, 21, 29, 38, 51, 68, 90, 120, 160 ]  # 原长历史截断
             bp.tage.numPredictors = 12  # 原14 → 减少预测器数量
 
+def set_branch_prediction_bandwidth_params_L1(args, system):
+    for cpu in system.cpu:
+        if hasattr(cpu, 'branchPred'):
+            bp = cpu.branchPred
+            # 预测流水线限制
+            bp.predictWidth = 32        # 原64 → 严格限制
+            bp.fsq_size = 144           # 原256 → 减小恢复队列
+            bp.ftq_size = 144
+            
 def set_branch_prediction_params_L1(args, system):
     """测试分支预测敏感性（预测器容量/恢复机制）"""
     for cpu in system.cpu:
@@ -161,15 +174,19 @@ def set_branch_prediction_params_L1(args, system):
             bp.ftb.numEntries = 4096    # 原16384 → 大幅缩小
             bp.tage.baseTableSize = 4096  # 原16384 → 缩小基础表
             
-            # 预测流水线限制
-            bp.predictWidth = 32        # 原64 → 严格限制
-            bp.fsq_size = 144           # 原256 → 减小恢复队列
-            bp.ftq_size = 144
-            
             # 历史长度调整
             bp.tage.histLengths = [4, 7, 12, 16, 21, 29, 38, 51, 68, 90 ]  # 原长历史截断
             bp.tage.numPredictors = 10  # 原14 → 减少预测器数量
 
+def set_branch_prediction_bandwidth_params_L2(args, system):
+    for cpu in system.cpu:
+        if hasattr(cpu, 'branchPred'):
+            bp = cpu.branchPred
+            # 预测流水线限制
+            bp.predictWidth = 16        # 原64 → 严格限制
+            bp.fsq_size = 128           # 原256 → 减小恢复队列
+            bp.ftq_size = 128 
+            
 def set_branch_prediction_params_L2(args, system):
     """测试分支预测敏感性（预测器容量/恢复机制）"""
     for cpu in system.cpu:
@@ -179,11 +196,6 @@ def set_branch_prediction_params_L2(args, system):
             bp.uftb.numEntries = 128    # 原1024 → 极简BTB
             bp.ftb.numEntries = 2048    # 原16384 → 大幅缩小
             bp.tage.baseTableSize = 2048  # 原16384 → 缩小基础表
-            
-            # 预测流水线限制
-            bp.predictWidth = 16        # 原64 → 严格限制
-            bp.fsq_size = 128           # 原256 → 减小恢复队列
-            bp.ftq_size = 128 
             
             # 历史长度调整
             bp.tage.histLengths = [4, 7, 12, 16, 21, 29, 38, 51]  # 原长历史截断
@@ -263,6 +275,9 @@ param_profiles = {
     'branch_L0': set_branch_prediction_params_L0,
     'branch_L1': set_branch_prediction_params_L1,
     'branch_L2': set_branch_prediction_params_L2,
+    'branch_bandwidth_L0': set_branch_prediction_bandwidth_params_L0,
+    'branch_bandwidth_L1': set_branch_prediction_bandwidth_params_L1,
+    'branch_bandwidth_L2': set_branch_prediction_bandwidth_params_L2,
     'cache_L0': set_cache_hierarchy_params_L0,
     'cache_L1': set_cache_hierarchy_params_L1,
     'cache_L2': set_cache_hierarchy_params_L2,
