@@ -10,6 +10,11 @@ PARAM_DESCS := \
 # 默认参数
 DEFAULT_PARA := ''
 PARA ?= $(DEFAULT_PARA)
+RESULT_BASE_DIR   := $(T1_HOME)/result
+
+# --- GEM5 相关配置 ---
+GEM5_EXECUTABLE   := $(GEM5)/build/RISCV/gem5.opt
+GEM5_CONFIG_SCRIPT:= $(GEM5)/configs/example/xiangshan.py
 
 # 参数检查规则（私有目标，用下划线前缀表示内部使用）
 _validate_para:
@@ -33,16 +38,48 @@ nemu-%:
 	docker compose exec openperf1 ./script/CompileCommon.sh $*
 
 gem5-tcc:_validate_para
-	docker compose exec openperf1 GEM5/build/RISCV/gem5.opt GEM5/configs/example/xiangshan.py --ideal-kmhv3 --cpu-profile=$(PARA) --raw-cpt --generic-rv-cpt=nexus-am/apps/tcc/build/riscv-tcc-riscv64-xs.bin
-	mkdir -p result/tcc
-	rm result/tcc/tcc-$(PARA) -rf
-	mv m5out result/tcc/tcc-$(PARA)
+	$(eval APP_NAME := $*)
+	$(eval CPU_PROFILE := $(PARA))
+	$(eval RUN_DIR := $(RESULT_BASE_DIR)/$(APP_NAME)/$(APP_NAME)-$(CPU_PROFILE))
+	$(eval INPUT_BINARY := $(AM_HOME)/apps/$(APP_NAME)/build/riscv-tcc-riscv64-xs.bin)
+
+	@mkdir -p $(RUN_DIR)
+	@find $(RUN_DIR) -mindepth 1 -delete
+
+	@mkdir -p $(RUN_DIR)
+	@find $(RUN_DIR) -mindepth 1 -delete
+
+	@( \
+		set -e; \
+		cd $(RUN_DIR); \
+		docker compose exec openperf1 $(GEM5_EXECUTABLE) $(GEM5_CONFIG_SCRIPT) \
+			--ideal-kmhv3 \
+			--cpu-profile=$(CPU_PROFILE) \
+			--raw-cpt \
+			--gen-eric-rv-cpt=$(INPUT_BINARY) \
+	)
+
+	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
 
 gem5-%:_validate_para
-	docker compose exec openperf1 GEM5/build/RISCV/gem5.opt GEM5/configs/example/xiangshan.py  --ideal-kmhv3 --cpu-profile=$(PARA) --raw-cpt --generic-rv-cpt=nexus-am/apps/$*/build/$*-riscv64-xs.bin
-	mkdir -p result/$*
-	rm result/$*/$*-$(PARA) -rf
-	mv m5out result/$*/$*-$(PARA) 
+	$(eval APP_NAME := $*)
+	$(eval CPU_PROFILE := $(PARA))
+	$(eval RUN_DIR := $(RESULT_BASE_DIR)/$(APP_NAME)/$(APP_NAME)-$(CPU_PROFILE))
+	$(eval INPUT_BINARY := $(AM_HOME)/apps/$(APP_NAME)/build/$(APP_NAME)-riscv64-xs.bin)
+
+	@mkdir -p $(RUN_DIR)
+	@find $(RUN_DIR) -mindepth 1 -delete
+
+	@( \
+		set -e; \
+		cd $(RUN_DIR); \
+		docker compose exec openperf1 $(GEM5_EXECUTABLE) $(GEM5_CONFIG_SCRIPT) \
+			--ideal-kmhv3 \
+			--cpu-profile=$(CPU_PROFILE) \
+			--raw-cpt \
+			--gen-eric-rv-cpt=$(INPUT_BINARY) \
+	)
+	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
 
 fix:
 	docker compose exec openperf1 ./script/fix.sh
