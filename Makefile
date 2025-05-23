@@ -10,80 +10,84 @@ PARAM_DESCS := \
 # 默认参数
 DEFAULT_PARA := ''
 PARA ?= $(DEFAULT_PARA)
-RESULT_BASE_DIR   := $(T1_HOME)/result
+DOCKER_WORK_DIR = /home/openperf
+RESULT_BASE_DIR   := result
+DOCKER_RESULT_BASE_DIR   := $(DOCKER_WORK_DIR)/result
 
-# --- GEM5 相关配置 ---
-GEM5_EXECUTABLE   := $(GEM5)/build/RISCV/gem5.opt
-GEM5_CONFIG_SCRIPT:= $(GEM5)/configs/example/xiangshan.py
+# --- gem5 相关配置 ---
+DOCKER_GEM5_EXECUTABLE   := $(DOCKER_WORK_DIR)/GEM5/build/RISCV/gem5.opt
+DOCKER_GEM5_CONFIG_SCRIPT:= $(DOCKER_WORK_DIR)/GEM5/configs/example/xiangshan.py
 
 # 参数检查规则（私有目标，用下划线前缀表示内部使用）
 _validate_para:
-		@if ! echo "$(VALID_PARAS)" | grep -qw "$(PARA)"; then \
-        echo "Error: Invalid PARA='$(PARA)'. Valid options: $(VALID_PARAS)"; \
+		@if ! echo "$(valid_paras)" | grep -qw "$(para)"; then \
+        echo "error: invalid para='$(para)'. valid options: $(valid_paras)"; \
         exit 1; \
 		fi
 
 # 帮助信息
 help:
-		@echo "Available parameters:"
-		@for desc in $(PARAM_DESCS); do \
+		@echo "available parameters:"
+		@for desc in $(param_descs); do \
         para=$${desc%%=*}; \
         description=$${desc#*=}; \
         printf "  %-10s - %s\n" "$$para" "$$description"; \
     done
 		@echo ""
-		@echo "Usage: make GEM5-* [PARA=value]"
+		@echo "usage: make gem5-* [para=value]"
 
 nemu-%:
-	docker compose exec openperf1 ./script/CompileCommon.sh $*
+	docker compose exec openperf1 ./script/compilecommon.sh $*
 
 gem5-tcc:_validate_para
 	$(eval APP_NAME := $*)
-	$(eval CPU_PROFILE := $(PARA))
-	$(eval RUN_DIR := $(RESULT_BASE_DIR)/$(APP_NAME)/$(APP_NAME)-$(CPU_PROFILE))
-	$(eval INPUT_BINARY := $(AM_HOME)/apps/$(APP_NAME)/build/riscv-tcc-riscv64-xs.bin)
+	$(eval RUN_DIR := $(result_base_dir)/$(app_name)/$(app_name)-$(cpu_profile))
+	$(eval DOCKER_RUN_DIR := $(DOCKER_RESULT_BASE_DIR)/$(app_name)/$(app_name)-$(cpu_profile))
+	$(eval DOCKER_INPUT_BINARY_PATH := $(DOCKER_WORK_DIR)/nexus-am/apps/$(app_name)/build/riscv-tcc-riscv64-xs.bin)
 
-	@mkdir -p $(RUN_DIR)
-	@find $(RUN_DIR) -mindepth 1 -delete
+	@mkdir -p $(run_dir)
+	@find $(run_dir) -mindepth 1 -delete
 
-	@mkdir -p $(RUN_DIR)
-	@find $(RUN_DIR) -mindepth 1 -delete
+	@mkdir -p $(run_dir)
+	@find $(run_dir) -mindepth 1 -delete
 
-	@( \
-		set -e; \
-		cd $(RUN_DIR); \
-		docker compose exec openperf1 $(GEM5_EXECUTABLE) $(GEM5_CONFIG_SCRIPT) \
-			--ideal-kmhv3 \
-			--cpu-profile=$(CPU_PROFILE) \
-			--raw-cpt \
-			--gen-eric-rv-cpt=$(INPUT_BINARY) \
-	)
+	@docker compose exec \
+		-w $(DOCKER_RUN_DIR) \
+		openperf1 \
+		$(DOCKER_GEM5_EXECUTABLE) $(DOCKER_GEM5_CONFIG_SCRIPT) \
+		--ideal-kmhv3 \
+		--cpu-profile=$(PARA) \
+		--raw-cpt \
+		--generic-rv-cpt=$(DOCKER_INPUT_BINARY_PATH) 
 
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR)
 	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
 
 gem5-%:_validate_para
 	$(eval APP_NAME := $*)
-	$(eval CPU_PROFILE := $(PARA))
 	$(eval RUN_DIR := $(RESULT_BASE_DIR)/$(APP_NAME)/$(APP_NAME)-$(CPU_PROFILE))
-	$(eval INPUT_BINARY := $(AM_HOME)/apps/$(APP_NAME)/build/$(APP_NAME)-riscv64-xs.bin)
+	$(eval DOCKER_RUN_DIR := $(DOCKER_RESULT_BASE_DIR)/$(APP_NAME)/$(APP_NAME)-$(CPU_PROFILE))
+	$(eval DOCKER_INPUT_BINARY_PATH := $(DOCKER_WORK_DIR)/nexus-am/apps/$(APP_NAME)/build/$(APP_NAME)-riscv64-xs.bin)
 
 	@mkdir -p $(RUN_DIR)
 	@find $(RUN_DIR) -mindepth 1 -delete
 
-	@( \
-		set -e; \
-		cd $(RUN_DIR); \
-		docker compose exec openperf1 $(GEM5_EXECUTABLE) $(GEM5_CONFIG_SCRIPT) \
-			--ideal-kmhv3 \
-			--cpu-profile=$(CPU_PROFILE) \
-			--raw-cpt \
-			--gen-eric-rv-cpt=$(INPUT_BINARY) \
-	)
-	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
+	@docker compose exec \
+		-w $(DOCKER_RUN_DIR) \
+		openperf1 \
+		$(DOCKER_GEM5_EXECUTABLE) $(DOCKER_GEM5_CONFIG_SCRIPT) \
+		--ideal-kmhv3 \
+		--cpu-profile=$(PARA) \
+		--raw-cpt \
+		--generic-rv-cpt=$(DOCKER_INPUT_BINARY_PATH) 
+
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR)
+	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)"
 
 fix:
 	docker compose exec openperf1 ./script/fix.sh
 env:
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR)
 	source ./script/env.sh
 
 init:
