@@ -60,7 +60,7 @@ gem5-tcc:_validate_para
 		--raw-cpt \
 		--generic-rv-cpt=$(DOCKER_INPUT_BINARY_PATH) 
 
-		@mv $(RUN_DIR)/m5out/* $(RUN_DIR) && rm $(RUN_DIR)/m5out
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR) && rm $(RUN_DIR)/m5out -rf
 	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
 
 gem5-%:_validate_para

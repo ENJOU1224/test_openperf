@@ -33,7 +33,7 @@ params=(
 )
 
 # 创建日志目录
-log_dir="test_logs_limited_parallel"
+log_dir="test_logs"
 mkdir -p "$log_dir"
 echo "日志目录: $log_dir"
 
