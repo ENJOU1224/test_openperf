@@ -37,7 +37,7 @@ help:
 		@echo "usage: make gem5-* [para=value]"
 
 nemu-%:
-	docker compose exec openperf1 ./script/compilecommon.sh $*
+	docker compose exec openperf1 ./script/CompileCommon.sh $*
 
 gem5-tcc:_validate_para
 	$(eval APP_NAME := $*)
@@ -60,7 +60,7 @@ gem5-tcc:_validate_para
 		--raw-cpt \
 		--generic-rv-cpt=$(DOCKER_INPUT_BINARY_PATH) 
 
-		@mv $(RUN_DIR)/m5out/* $(RUN_DIR)
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR) && rm $(RUN_DIR)/m5out
 	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)/m5out"
 
 gem5-%:_validate_para
@@ -81,7 +81,7 @@ gem5-%:_validate_para
 		--raw-cpt \
 		--generic-rv-cpt=$(DOCKER_INPUT_BINARY_PATH) 
 
-		@mv $(RUN_DIR)/m5out/* $(RUN_DIR)
+		@mv $(RUN_DIR)/m5out/* $(RUN_DIR) && rm $(RUN_DIR)/m5out
 	@echo "Completed: App='$(APP_NAME)', Profile='$(CPU_PROFILE)', Output: $(RUN_DIR)"
 
 fix:
