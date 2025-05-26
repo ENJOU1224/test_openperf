@@ -95,3 +95,23 @@ make gem5-linpack PARA=frontend # 测试前端砍了规格的方案
 ```
 
 ** 注意，所有测试项都需要先make nemu-xxx 再make gem5-xxx **
+
+如需批量测试，我们在makefile之中提供了批量测试规则，
+
+```bash
+make test # 默认进行所有程序在 gem5 不同参数配置下的全部测试
+```
+
+该规则通过 `program` 参数支持批量运行同一测试程序在所有 gem5 预设配置下的测试，暂未支持同一 gem5 预设配置下所有测试项的批量测试（感觉意义不大）
+
+```bash
+make test PROGRAM=linpack # 使用 PROGRAM 参数指定进行 linpack 程序在各种不同的gem5配置之下的测试
+```
+
+测试完成后，测试的m5out文件夹内容会存放在result文件夹下对应程序和参数位置。
+
+Makefile 也提供了对测试结果进行可视化的规则，运行如下规则会根据现有测试结果生成相关柱状图。
+
+```bash
+make analyze
+```
