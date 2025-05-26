@@ -3,15 +3,15 @@
 # --- ANSI Color Codes (直接给 echo 使用) ---
 # make 会将这些变量的值直接传递给 shell 的 echo 命令
 # 如果 shell 默认解释 ANSI codes (很多现代 shell 会) 或者 make 以某种方式促成，就能工作
-COLOR_BOLD_GREEN   := \033[1;32m
-COLOR_GREEN        := \033[0;32m
-COLOR_CYAN         := \033[0;36m # 使用青色替代蓝色
-COLOR_BOLD_CYAN    := \033[1;36m
-COLOR_YELLOW       := \033[0;33m
-COLOR_BOLD_YELLOW  := \033[1;33m
-COLOR_RED          := \033[0;31m
-COLOR_BOLD_RED     := \033[1;31m
-COLOR_RESET        := \033[0m
+COLOR_BOLD_GREEN   :=\033[1;32m
+COLOR_GREEN        :=\033[0;32m
+COLOR_CYAN         :=\033[0;36m # 使用青色替代蓝色
+COLOR_BOLD_CYAN    :=\033[1;36m
+COLOR_YELLOW       :=\033[0;33m
+COLOR_BOLD_YELLOW  :=\033[1;33m
+COLOR_RED          :=\033[0;31m
+COLOR_BOLD_RED     :=\033[1;31m
+COLOR_RESET        :=\033[0m
 
 # --- 常量和配置 ---
 VALID_PARAS := frontend_L0 frontend_L1 frontend_L2 \
@@ -22,8 +22,8 @@ VALID_PARAS := frontend_L0 frontend_L1 frontend_L2 \
                cache_L0 cache_L1 cache_L2 \
                ''
 
-DEFAULT_PARA := ''
-PARA ?= $(DEFAULT_PARA)
+PARA ?= 
+PROGRAM ?= 
 
 DOCKER_WORK_DIR        := /home/openperf
 RESULT_BASE_DIR      := result
@@ -54,13 +54,14 @@ help:
 	@echo "  $(COLOR_GREEN)nemu$(COLOR_RESET)               Compile NEMU itself."
 	@echo "  $(COLOR_GREEN)fix$(COLOR_RESET)                Run fix script."
 	@echo "  $(COLOR_GREEN)init$(COLOR_RESET)               Checkout submodules."
-	@echo "  $(COLOR_GREEN)test$(COLOR_RESET)               Run testAll.sh script."
+	@echo "  $(COLOR_GREEN)test$(COLOR_RESET)               Run run_test.sh script."
 	@echo "  $(COLOR_GREEN)analyze$(COLOR_RESET)            Run analyze_result.py script."
 	@echo "  $(COLOR_GREEN)clean_results$(COLOR_RESET)      Remove the '$(COLOR_YELLOW)$(RESULT_BASE_DIR)$(COLOR_RESET)' directory."
 	@echo "  $(COLOR_GREEN)help_paras$(COLOR_RESET)         Show available PARA values for gem5-* targets."
 	@echo "  $(COLOR_GREEN)help$(COLOR_RESET)               Show this help message."
 	@echo ""
 	@echo "Example: make $(COLOR_GREEN)gem5-linpack$(COLOR_RESET) PARA=$(COLOR_CYAN)frontend_L1$(COLOR_RESET)"
+	@echo "Example: make $(COLOR_GREEN)test$(COLOR_RESET) PROGRAM=$(COLOR_CYAN)linpack$(COLOR_RESET)"
 
 help_paras:
 	@echo "$(COLOR_BOLD_CYAN)Available PARA values for gem5-* targets (leave empty or use '' for default):$(COLOR_RESET)"
@@ -124,8 +125,8 @@ init:
 	@echo "$(COLOR_GREEN)Submodules reset complete.$(COLOR_RESET)"
 
 test:
-	@echo "$(COLOR_BOLD_YELLOW)INFO:$(COLOR_RESET) Running testAll.sh script..."
-	@./script/run_test.sh
+	@echo "$(COLOR_BOLD_YELLOW)INFO:$(COLOR_RESET) Running run_test.sh script..."
+	@./script/run_test.sh $(PROGRAM)
 
 analyze:
 	@echo "$(COLOR_BOLD_YELLOW)INFO:$(COLOR_RESET) Running analyze_result.py script..."
