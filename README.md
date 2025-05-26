@@ -108,6 +108,8 @@ make test # 默认进行所有程序在 gem5 不同参数配置下的全部测�
 make test PROGRAM=linpack # 使用 PROGRAM 参数指定进行 linpack 程序在各种不同的gem5配置之下的测试
 ```
 
+** 批量测试通过运行 script/run_test.sh 执行，其中含有并行化配置max_jobs，默认为1, 可根据内存大小进行配置，主要吃内存，每个测试大概吃内存8-9GB，请根据电脑内存情况选择合适的max_jobs数值
+
 测试完成后，测试的m5out文件夹内容会存放在result文件夹下对应程序和参数位置。
 
 Makefile 也提供了对测试结果进行可视化的规则，运行如下规则会根据现有测试结果生成相关柱状图。
